@@ -71,6 +71,9 @@ var chart = Highcharts.chart('container', {
   }, {
     name: 'CPU',
     data: []
+  }, {
+    name: 'WIFI',
+    data: []
   }],
 
   responsive: {
@@ -93,21 +96,43 @@ var chart = Highcharts.chart('container', {
 
 
 
-
+	var startTIME=(new Date()).getTime();
 
 	(function() {
 		var socket = io();
 		socket.on('drawing', onDrawingEvent);
 		function onDrawingEvent(data){
 			//console.log(data);
+			
+				let deltaTime = (data.time - startTIME)/1000; //  w sekundach
+				//console.log('deltaTime=',deltaTime);
+				
 			//let time = (new Date()).getTime()
-			let ile = chart.series[1].data.length;
+			let ile = chart.series[0].data.length;
 			let flagi=[false,true,true,true];
-			if (chart.series[1].data.length<60){flagi=[true,false,true,false];}
-			console.log(ile,flagi);
-			chart.series[0].addPoint([data.time,data.cpu], flagi[0],flagi[1]);
-			chart.series[1].addPoint([data.time,data.tem], flagi[2],flagi[3]);
+			//if (ile<60){flagi=[true,false,true,false];}
+			
+			let pierwszy = ile>1  ? chart.series[0].data[0].x : (new Date()).getTime();
+			let dlugosc  = (data.time - pierwszy)/1000;	// sekundy
+			console.log('ile='+ile+'  pierwszy='+pierwszy+'  dlugosc='+dlugosc);
+			if (dlugosc<900){flagi=[true,false,true,false];} // czas w sekundach / 900=15minut
+			//if (deltaTime<900){flagi=[true,false,true,false];} // czas w sekundach
+			//console.log(ile,flagi);
+			chart.series[0].addPoint([data.time,data.tem], flagi[0],flagi[1]);
+			chart.series[1].addPoint([data.time,data.cpu], flagi[0],flagi[1]);
+			chart.series[2].addPoint([data.time,data.wif], flagi[2],flagi[3]);
 		}
+		
+	socket.on('connect_error', function (data) {
+        console.log('connection_error restart 15 sek');
+		setTimeout(function(){
+			console.log('connection again');
+			var socket = io();
+			socket.on('drawing', onDrawingEvent);
+
+		},15000)
+    });		
+		
 	})();
 
 </script>  

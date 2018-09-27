@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"> 
+	<title>Wykresy.IO</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1"> 
+	<meta name="mobile-web-app-capable" content="yes"> 
+	<link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAUk1IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEQAAAAABEAABAAAAABEAAAEQAAAAEAAAABEAAAEQAAAAAQAAAQAAAAABAAARAAAAAAAQARAAAAAAABEBAAABAAAAARAAAAEAAAAAAAAAABAAAAAAAAAAEQAAAAAAARABEAAAAAAQAAAREAAAERAAAAAREREQAAAAAAAAAAAADn/AAA9/kAAPP7AAD58wAA/fcAAP3nAAD+zwAA/l8AAH8/AAB//wAAv/8AAJ/8AADP+wAA4+MAAPgPAAD//wAA" />
+	<link rel="icon" type="image/png" size="128x128" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAq1BMVEX///9VYIDweFpxwoXwxBmaoLP2r533u6xdZ4bX2uH12Gf6/fuX06bP6tX23HiDi6Jqc4/3+Pn7186mrL1ye5WByZPzlX7v8PPk5evLztjxg2f+9PLq9u3739jCxtKgprjzzTzX7t3A5Mmt3Lif1qyNzp3zjXP96eT89NW54cOFy5b44oz++/Hh8uby+fT60cf4wrX1ppL0nYf77r366aj888/01Vrz0Uy2u8mafkqeAAADgElEQVR42sTWy26DMBCF4ZlIGLKyA4hwEbBLlgRWff8nq9RGOotUNHBM5n8Bf5HHE2RXdfM1el/Is7Sa3WPq5SNdh9Fn+lMiz9zpt8pNdzmyS5MERQkA6OZ6OabLkGSKXgConSeJXo3TVwAwuLh30XhFqwC05BKrIahuAGAc4hCaUnUbAFU8ofaqOwAg9NzkJ6r7AMh1srtzUAKAUSB+PgNAM/HzGQCqdlzDkCkNQO3mvVQoIgAQ5Nuu32skAHps+cstNRoAuS3nEwB+FK9BowLQ7a1RrIPGBkDQEb+fAKDq//kvlQHwk+iVAfCvsdCDAChf3b9KA6itXGcHAiDoVgaQAfBPYVQKQD+FRg8GoP7PCwifA9yIC2AAKCVeAANAd2IFRgEsL5+gSgLYOSw/DaiIJ8gAUM5NAA+oXiaAApBT4C0AM86v1QJw6rAEbQBYh8EG0GIETQB4iYkNAN8FmRWgxRY0AGAVjDYA3EFpAsCX0UVNANhFjSUgxwjYAFKMgA1gwRawAbQiVzUBYArPtoBeBlvAJIUtIJXEFuDE2wKWKIA83d1DSg7AF0wB1CLMzlEA1udLZnQ+AMbnSzA+X0rj88VHOv+7WLNbaRiIwuAHWjBNmiAhqBA0f4WkaXrTqu//ZiKlrNU2cc9EnOvAzLIny17sfmkiVsL8jvjWQqEF8fOCpVLkL0NY0OuZ+Fc3ESw4KED+G1rQ6h75ccFWugN+XFBISoAfF7xJSoEfF8SSAuDHBQdJ98CPC14lKQF+WFDokxT4YUGvTwLghwWtu5MY/Lyg0JEX4EcFvY4EwI8KWncvNPh5QaETKfCDgl4nHu4Mfl7Qui8XBj8uKOR4NPhxwV5yJAY/LHjXVwKDHxa86ozE4EcFS53zaPCjglbfWBj8oCCWw50FHn5asNUPnj38uKDXBRIPPywotiPPaKb9vGCviwQeflTQ6wqphx8UvOkqyYifF4wMgPsXJ/28oNUIT1N+XnDQKOm4nxfEmmDUzwveQ+TnBVvm5wXAjwqonxcA//8UdFDIC8ps5oJSnuyiOfXrXP5U8/k7mRg28+g3g4yEzRz+OpSdFZ7FrBRiV8Pl70TJG/vqO6cnDI1NX4Wai7zOvEd/FWpOwmrtdfCUmp+8+11D1lS5RmAN0dTSu0F/zFA12ZVtrz32nRHmZVU3UbTeZNlmHUVNXZW5Tf4BUFWIN/VDa5gAAAAASUVORK5CYII="> 
+	<style>
+		* {box-sizing: border-box;}
+		html, body {height: 100%;}
+		body,button {font:normal 12pt Verdana; margin:0.5em; padding:0.5em;}
+		button:focus {outline:0;}
+		p {margin:0.2em 0;}
+		@media screen and (max-width: 640px){
+			body {margin:0.2em}
+		}
+	
+		#container {
+		  min-width: 320px;
+		  max-width: 1000px;
+		  height: 400px;
+		  margin: 0 auto
+		}	
+	</style>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<!--script src="https://code.highcharts.com/modules/data.js"></script-->
+	<!--script src="https://code.highcharts.com/modules/series-label.js"></script-->
+	<!--script src="https://code.highcharts.com/modules/exporting.js"></script-->
+	<!--script src="https://code.highcharts.com/modules/export-data.js"></script-->
+</head>
+<body>
+
+<div id="container"></div>
+
+
+  
+<script>
+'use strict';
+
+var chart = Highcharts.chart('container', {
+    chart: {
+        type: 'spline',
+        //animation: Highcharts.svg, // don't animate in old IE
+        //marginRight: 10,
+    },
+    time: {
+        //useUTC: false
+    },
+  title: {text: 'PRI'},
+  subtitle: {text: 'RaspberryPI'},
+    tooltip: {
+        //pointFormat: '{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}'
+        headerFormat: '<b>{series.name}: {point.y:.2f}</b><br/>',
+        pointFormat: '{point.x:%H:%M:%S}'
+    },  
+    xAxis: {
+		title: {text: 'Czas'},
+        type: 'datetime',
+        //tickPixelInterval: 150
+    },
+  yAxis: {title: {text: 'On board'}},
+  legend: {layout: 'vertical',align: 'right',verticalAlign: 'middle'},
+  plotOptions: {series: {label: {connectorAllowed: false},pointStart: 0}},
+  series: [{
+    name: 'Temp.',
+    data: []
+  }, {
+    name: 'CPU',
+    data: []
+  }],
+
+  responsive: {
+    rules: [{
+      condition: {
+        maxWidth: 900
+      },
+      chartOptions: {
+        legend: {
+          layout: 'horizontal',
+          align: 'center',
+          verticalAlign: 'bottom'
+        }
+      }
+    }]
+  }
+
+});
+
+
+
+
+
+
+	(function() {
+		var socket = io();
+		socket.on('drawing', onDrawingEvent);
+		function onDrawingEvent(data){
+			//console.log(data);
+			//let time = (new Date()).getTime()
+			let ile = chart.series[1].data.length;
+			let flagi=[false,true,true,true];
+			if (chart.series[1].data.length<60){flagi=[true,false,true,false];}
+			console.log(ile,flagi);
+			chart.series[0].addPoint([data.time,data.cpu], flagi[0],flagi[1]);
+			chart.series[1].addPoint([data.time,data.tem], flagi[2],flagi[3]);
+		}
+	})();
+
+</script>  
+</body>
+</html>

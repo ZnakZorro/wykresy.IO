@@ -20,22 +20,52 @@
 		#container {
 		  min-width: 320px;
 		  max-width: 1000px;
-		  height: 400px;
-		  margin: 0 auto
+		  height: 500px;
+		  margin: 0 auto;
+		  border:1px solid silver;
 		}	
 	</style>
 
+	<script src="ajax.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<!--script src="https://code.highcharts.com/modules/data.js"></script-->
 	<!--script src="https://code.highcharts.com/modules/series-label.js"></script-->
 	<!--script src="https://code.highcharts.com/modules/exporting.js"></script-->
 	<!--script src="https://code.highcharts.com/modules/export-data.js"></script-->
+
+<script>
+function newTime(time){
+postData('/time/'+time, {body:999, time: time, val:11111111111})
+  .then(data => {
+	console.log(JSON.stringify(data))
+  })
+  .catch(error => console.error(error));
+}
+
+
+</script>	
+	
+	
 </head>
 <body>
 
 <div id="container"></div>
-
+<!--
+<button onClick="newTime(250)">250</button>
+<button onClick="newTime(1000)">1000</button>
+<button onClick="newTime(15000)">15000</button>
+<hr />
+-->
+<button onClick="newSocketTime(100)">100ms</button>
+<button onClick="newSocketTime(250)">250ms</button>
+<button onClick="newSocketTime(1000)">1s</button>
+<button onClick="newSocketTime(5000)">5s</button>
+<button onClick="newSocketTime(15000)">15s</button>
+<button onClick="newSocketTime(36000)">1min</button>
+<button onClick="newSocketTime(360000)">10min</button>
+<hr />
+<div>Czas zadany/rzyczywisty: <span id="convTime">?</span> / <span id="realTime">?</span> ms.</div>
 
   
 <script>
@@ -48,7 +78,7 @@ var chart = Highcharts.chart('container', {
         //marginRight: 10,
     },
     time: {
-        //useUTC: false
+        useUTC: false
     },
   title: {text: 'PRI'},
   subtitle: {text: 'RaspberryPI'},
@@ -62,7 +92,7 @@ var chart = Highcharts.chart('container', {
         type: 'datetime',
         //tickPixelInterval: 150
     },
-  yAxis: {title: {text: 'On board'}},
+  yAxis: {title: {text: 'board'}},
   legend: {layout: 'vertical',align: 'right',verticalAlign: 'middle'},
   plotOptions: {series: {label: {connectorAllowed: false},pointStart: 0}},
   series: [{
@@ -97,12 +127,23 @@ var chart = Highcharts.chart('container', {
 
 
 	var startTIME=(new Date()).getTime();
+	var step=0;
+	var socket = io();
+	
+			function newSocketTime(time){
+				socket.emit('config',{time:time})
+				document.getElementById('convTime').textContent=time;
+			}	
 
+
+			
 	(function() {
-		var socket = io();
+		
 		socket.on('drawing', onDrawingEvent);
+		
 		function onDrawingEvent(data){
-			//console.log(data);
+			console.log('#140=',data.tre);
+				document.getElementById('realTime').textContent=data.tre;
 			
 				let deltaTime = (data.time - startTIME)/1000; //  w sekundach
 				//console.log('deltaTime=',deltaTime);
@@ -114,8 +155,8 @@ var chart = Highcharts.chart('container', {
 			
 			let pierwszy = ile>1  ? chart.series[0].data[0].x : (new Date()).getTime();
 			let dlugosc  = (data.time - pierwszy)/1000;	// sekundy
-			console.log('ile='+ile+'  pierwszy='+pierwszy+'  dlugosc='+dlugosc);
-			if (dlugosc<900){flagi=[true,false,true,false];} // czas w sekundach / 900=15minut
+			console.log('step='+step+' ile='+ile+'  dlugosc='+dlugosc); step++;
+			if (dlugosc<3600 && ile < 100){flagi=[true,false,true,false];} // czas w sekundach / 900=15minut
 			//if (deltaTime<900){flagi=[true,false,true,false];} // czas w sekundach
 			//console.log(ile,flagi);
 			chart.series[0].addPoint([data.time,data.tem], flagi[0],flagi[1]);
@@ -132,7 +173,10 @@ var chart = Highcharts.chart('container', {
 
 		},15000)
     });		
-		
+	
+	
+	
+	
 	})();
 
 </script>  

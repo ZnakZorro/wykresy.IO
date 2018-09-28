@@ -12,29 +12,53 @@ app.use(express.static(__dirname + '/public'));
 io.on('connection', onConnectionStart);
 
 var ttt=null;
+let intervalTIME = 15000;
+let _socket = null;
+
+var timeStart=(new Date()).getTime();
+var timeStop =(new Date()).getTime();
+var timeDelta =0;
+
 
 function slij(socket){
+	timeStop  = (new Date()).getTime();
+	timeDelta = timeStop-timeStart;
+	timeStart =(new Date()).getTime();
 	licz++
+	console.log('intervalTIME=',intervalTIME,' timeDelta='+timeDelta)
 	socket.broadcast.emit('drawing', los());
-	//console.timeEnd('a');
-	//console.time('a');
+	console.timeEnd('a');
+	console.time('a');
+	
+	//if (ttt===null) 
+		ttt=setTimeout(function(){slij(socket);},intervalTIME);
 }
 
+
+var czyWyslac = true;
+
 function onConnectionStart(socket){
-	//console.log('onConnectionStart')
-	//console.time('a');
+	
+
+	console.log('onConnectionStart',czyWyslac)
+	console.time('a');
+	_socket = socket;
 	onConnection(socket);
-	if (ttt===null) ttt=setInterval(function(){
-		slij(socket);
-		//console.log(licz+" = ttt\n");
-	},15000);
+	if (czyWyslac) slij(socket);
+	czyWyslac = false;
+	//if (ttt===null) ttt=setInterval(function(){slij(socket);},intervalTIME);
 
 }
 
 function onConnection(socket){
-  socket.on('drawing', (data) => {
+	socket.on('config', (data) => {
+		console.log('config=',data,data.time);
+		intervalTIME = parseInt(data.time);
+	})
+	socket.on('drawing', (data) => {
 	  //console.log(data);
-	  socket.broadcast.emit('drawing', data)
+	  //socket.broadcast.emit('drawing', data)
+	  
   });
   
 }
@@ -66,9 +90,35 @@ let WIF = Math.round(parseFloat(wif));
 		time :(new Date()).getTime(),
 		cpu: CPU,
 		tem: TEM,
-		wif: WIF
+		wif: WIF,
+		tim: intervalTIME,
+		tre: timeDelta
 	}
 }
+
+
+
+
+app.post('/time/*', function(req, res) {
+	//console.log('#7=',(req));	
+	var param = req.params;
+	intervalTIME = parseInt(param[0]);
+	console.log('#intervalTIME=',intervalTIME);	
+	//if (ttt) clearTimeout(ttt);
+	//ttt=setInterval(function(){slij(_socket);},intervalTIME);
+	/*
+	console.log('#80=',param[0]);	
+	console.log('#80=',parseInt(param[0]));	
+	//console.log('#78=',JSON.stringify(req.body));	
+	//console.log('#242=',JSON.stringify(param));	
+	//console.log('#77=',JSON.stringify(req.query))
+	console.log('#78=',req.query)
+	
+	//var time = req.query('time');
+	//console.log(time)
+	*/
+	res.send({time:intervalTIME});
+});
 
 
 

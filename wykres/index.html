@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8"> 
+	<title>Wykresy.IO</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1"> 
+	<meta name="mobile-web-app-capable" content="yes"> 
+	<link rel="icon" type="image/png" size="128x128" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAq1BMVEX///9VYIDweFpxwoXwxBmaoLP2r533u6xdZ4bX2uH12Gf6/fuX06bP6tX23HiDi6Jqc4/3+Pn7186mrL1ye5WByZPzlX7v8PPk5evLztjxg2f+9PLq9u3739jCxtKgprjzzTzX7t3A5Mmt3Lif1qyNzp3zjXP96eT89NW54cOFy5b44oz++/Hh8uby+fT60cf4wrX1ppL0nYf77r366aj888/01Vrz0Uy2u8mafkqeAAADgElEQVR42sTWy26DMBCF4ZlIGLKyA4hwEbBLlgRWff8nq9RGOotUNHBM5n8Bf5HHE2RXdfM1el/Is7Sa3WPq5SNdh9Fn+lMiz9zpt8pNdzmyS5MERQkA6OZ6OabLkGSKXgConSeJXo3TVwAwuLh30XhFqwC05BKrIahuAGAc4hCaUnUbAFU8ofaqOwAg9NzkJ6r7AMh1srtzUAKAUSB+PgNAM/HzGQCqdlzDkCkNQO3mvVQoIgAQ5Nuu32skAHps+cstNRoAuS3nEwB+FK9BowLQ7a1RrIPGBkDQEb+fAKDq//kvlQHwk+iVAfCvsdCDAChf3b9KA6itXGcHAiDoVgaQAfBPYVQKQD+FRg8GoP7PCwifA9yIC2AAKCVeAANAd2IFRgEsL5+gSgLYOSw/DaiIJ8gAUM5NAA+oXiaAApBT4C0AM86v1QJw6rAEbQBYh8EG0GIETQB4iYkNAN8FmRWgxRY0AGAVjDYA3EFpAsCX0UVNANhFjSUgxwjYAFKMgA1gwRawAbQiVzUBYArPtoBeBlvAJIUtIJXEFuDE2wKWKIA83d1DSg7AF0wB1CLMzlEA1udLZnQ+AMbnSzA+X0rj88VHOv+7WLNbaRiIwuAHWjBNmiAhqBA0f4WkaXrTqu//ZiKlrNU2cc9EnOvAzLIny17sfmkiVsL8jvjWQqEF8fOCpVLkL0NY0OuZ+Fc3ESw4KED+G1rQ6h75ccFWugN+XFBISoAfF7xJSoEfF8SSAuDHBQdJ98CPC14lKQF+WFDokxT4YUGvTwLghwWtu5MY/Lyg0JEX4EcFvY4EwI8KWncvNPh5QaETKfCDgl4nHu4Mfl7Qui8XBj8uKOR4NPhxwV5yJAY/LHjXVwKDHxa86ozE4EcFS53zaPCjglbfWBj8oCCWw50FHn5asNUPnj38uKDXBRIPPywotiPPaKb9vGCviwQeflTQ6wqphx8UvOkqyYifF4wMgPsXJ/28oNUIT1N+XnDQKOm4nxfEmmDUzwveQ+TnBVvm5wXAjwqonxcA//8UdFDIC8ps5oJSnuyiOfXrXP5U8/k7mRg28+g3g4yEzRz+OpSdFZ7FrBRiV8Pl70TJG/vqO6cnDI1NX4Wai7zOvEd/FWpOwmrtdfCUmp+8+11D1lS5RmAN0dTSu0F/zFA12ZVtrz32nRHmZVU3UbTeZNlmHUVNXZW5Tf4BUFWIN/VDa5gAAAAASUVORK5CYII="> 
+	<style>
+		* {box-sizing: border-box;}
+		html, body {height: 100%;}
+		body,button {font:normal 12pt Verdana; margin:0.5em; padding:0.5em;}
+		button:focus {outline:0;}
+		p {margin:0.2em 0;}	
+		#container {
+		  min-width: 320px;
+		  max-width: 1000px;
+		  height: 500px;
+		  margin: 0 auto;
+		  border:1px solid silver;
+		}	
+		@media screen and (max-width: 640px){
+			body {margin:0.2em}
+		}		
+	</style>
+<style>
+.ld-label {
+	width:200px;
+	display: inline-block;
+}
+
+.ld-row {
+}
+
+.ld-url-input {
+	width: 500px; 
+}
+
+.ld-time-input {
+	width: 40px;
+}
+</style>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+</head>
+<body>
+
+
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<div class="ld-row">
+	<label class="ld-label">
+		Enable Polling
+	</label>
+	<input type="checkbox" checked="checked" id="enablePolling"/>
+</div>
+<div class="ld-row">
+	<label class="ld-label">
+		Polling Time (Seconds)
+	</label>
+	<input class="ld-time-input" type="number" value="9" id="pollingTime"/>
+</div>
+<div class="ld-row">
+	<label class="ld-label">
+		CSV URL
+	</label>
+	<input class="ld-url-input" type="text" id="fetchURL"/>
+</div>
+<div class="ld-row">
+<button onClick="zmianaCzasu(1)">1 min</button>
+<button onClick="zmianaCzasu(5)">5 min</button>
+<button onClick="zmianaCzasu(15)">15 min</button>
+<button onClick="zmianaCzasu(30)">30 min</button>
+<button onClick="zmianaCzasu(60)">1h</button>
+<button onClick="zmianaCzasu(720)">12h</button>
+<button onClick="zmianaCzasu(1440)">24h</button>
+</div>
+
+
+
+<script>
+
+let periodTime = (3600 *1000); // 1h   -> mils
+
+function zmianaCzasu(t){
+	periodTime = t*(60 *1000)+1000;
+	createChart();
+}
+
+
+var defaultData = 'http://www.wi.zut.edu.pl/druk/zapas/time-data.csv.php';
+var urlInput = document.getElementById('fetchURL');
+var pollingCheckbox = document.getElementById('enablePolling');
+var pollingInput = document.getElementById('pollingTime');
+
+Highcharts.setOptions({
+    time: {
+        //timezone: 'Europe/Warsaw',
+		 timezoneOffset: -2 * 60
+    }
+});
+
+	function createChart() {
+		Highcharts.chart('container', {
+			chart: {
+				type: 'spline',
+				events: {
+					  load: function(ev) {
+						//console.log(1,ev,this);
+					  },
+					  addSeries: function (ev) {
+						//console.log(2,ev,this);
+						//console.log(this.series.length);
+						//console.log(this.series[0]);
+					  }
+					  
+					}
+				
+			},
+			title: {
+				text: 'Live Data'
+			},
+		    legend: {
+				margin: 5,
+				padding: 0,
+				itemMarginTop: 15,
+				itemMarginBottom: 5,				
+				itemStyle: {
+					fontSize:16,
+					fontWeight: 'bold'
+				}				
+			},
+			xAxis: {
+				type: 'datetime',
+				dateTimeLabelFormats: { // don't display the dummy year
+					month: '%e. %b',
+					year: '%b'
+				},
+				title: {text: 'Czas'}
+			},
+			yAxis: [
+				{
+					lineWidth: 1,
+					title: {text: 'Primary Axis'},
+					//min:-20,
+					//max:40
+				}, {
+					lineWidth: 1,
+					opposite: true,
+					title: {text: 'Secondary Axis'},
+					//min:900,
+					//max:1050
+				}
+			],
+				series: [
+				{yAxis: 0},
+				{yAxis: 0},
+				{yAxis: 0},
+				{yAxis: 1},
+				{yAxis: 1}
+				],				
+			data: {
+			
+				//startRow: 1,
+				//endRow: 10,
+				csvURL: urlInput.value,
+				enablePolling: pollingCheckbox.checked === true,
+				dataRefreshRate: parseInt(pollingInput.value, 10),
+					beforeParse: function (csv) {
+						let arr = csv.split("\n");
+						//let arar=arr.slice(-10);
+						csv='';
+						let teraz = (new Date()).getTime();
+						let prevTime = teraz - periodTime;
+						//console.log(Number.isInteger(teraz))
+						let i=0;
+						arr.forEach(function(l){
+							let a = l.split(',');
+							let t = parseInt(a[0]);
+							if (t){
+								//console.log(Number.isInteger(t),'t='+t,'prev='+prevTime,t < prevTime);
+								if (prevTime<=t) {csv += l+"\n";i++;}
+							}
+						});
+						console.log(typeof(i),i<0,i==1,i===1,'i=',i,csv.length,csv)
+						console.log(arr[arr.length-2])
+						console.log(arr[arr.length-3])
+						console.log(arr[arr.length-4])
+						if(i==1) {
+							csv += (arr[arr.length-2]+"\n");
+							csv += (arr[arr.length-3]+"\n");
+							csv += (arr[arr.length-4]+"\n");
+							console.log('---',i,csv)
+						}
+						
+						return csv;//csv.replace(/\n\n/g, '\n');
+					}				
+				
+				}
+			});
+
+			if (pollingInput.value < 1 || !pollingInput.value) {
+				pollingInput.value = 1;
+			}
+	}
+
+urlInput.value = defaultData;
+
+// We recreate instead of using chart update to make sure the loaded CSV
+// and such is completely gone.
+pollingCheckbox.onchange = urlInput.onchange = pollingInput.onchange = createChart;
+
+// Create the chart
+createChart();
+
+
+
+</script>
+
+</body>
+</html>

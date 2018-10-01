@@ -12,6 +12,7 @@
 		body,button {font:normal 12pt Verdana; margin:0.5em; padding:0.5em;}
 		button:focus {outline:0;}
 		p {margin:0.2em 0;}	
+		.active {background:darkred; color:white;}
 		#container {
 		  min-width: 320px;
 		  max-width: 1000px;
@@ -46,49 +47,69 @@
 </head>
 <body>
 
+	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-<div class="ld-row">
-	<label class="ld-label">
-		Enable Polling
-	</label>
-	<input type="checkbox" checked="checked" id="enablePolling"/>
-</div>
-<div class="ld-row">
-	<label class="ld-label">
-		Polling Time (Seconds)
-	</label>
-	<input class="ld-time-input" type="number" value="9" id="pollingTime"/>
-</div>
-<div class="ld-row">
-	<label class="ld-label">
-		CSV URL
-	</label>
-	<input class="ld-url-input" type="text" id="fetchURL"/>
-</div>
-<div class="ld-row">
-<button onClick="zmianaCzasu(1)">1 min</button>
-<button onClick="zmianaCzasu(5)">5 min</button>
-<button onClick="zmianaCzasu(15)">15 min</button>
-<button onClick="zmianaCzasu(30)">30 min</button>
-<button onClick="zmianaCzasu(60)">1h</button>
-<button onClick="zmianaCzasu(720)">12h</button>
-<button onClick="zmianaCzasu(1440)">24h</button>
-</div>
-
+	<div class="ld-row">
+		<label class="ld-label">
+			Enable Polling
+		</label>
+		<input type="checkbox" checked="checked" id="enablePolling"/>
+	</div>
+	<div class="ld-row">
+		<label class="ld-label">
+			Polling Time (Seconds)
+		</label>
+		<input class="ld-time-input" type="number" value="9" id="pollingTime"/>
+	</div>
+	<div class="ld-row">
+		<label class="ld-label">
+			CSV URL
+		</label>
+		<input class="ld-url-input" type="text" id="fetchURL"/>
+	</div>
+	<div class="ld-row" id="info"></div>
+	
+	<div class="ld-row" id="klawisze">
+		<button onClick="zmianaCzasu(this,1)">1 min</button>
+		<button onClick="zmianaCzasu(this,6)">5 min</button>
+		<button onClick="zmianaCzasu(this,16)">15 min</button>
+		<button onClick="zmianaCzasu(this,30)">30 min</button>
+		<button class="btn active" onClick="zmianaCzasu(this,60)">1h</button>
+		<button class="btn" onClick="zmianaCzasu(this,720)">12h</button>
+		<button class="btn" onClick="zmianaCzasu(this,1440)">24h</button>
+	</div>
+	<div class="ld-row" id="widoki">
+		<button class="btn" onClick="zmianaWidoku(this,[true,true,true,true,true])">all</button>
+		<button class="btn active" onClick="zmianaWidoku(this,[true,true,true,false,false])">Low</button>
+		<button class="btn" onClick="zmianaWidoku(this,[false,false,false,true,true])">High</button>
+	</div>
 
 
 <script>
+const $=(y)=>document.querySelector(y);
+const $$=(y)=>document.querySelectorAll(y);
+
+// DOM READY
+document.addEventListener('DOMContentLoaded', function() {
+
+});// dom ready
+
 
 let periodTime = (3600 *1000); // 1h   -> mils
 
-function zmianaCzasu(t){
+function zmianaCzasu(ten,t){
+	[].forEach.call($$('#klawisze button'), function(el) {el.classList.remove('active');});
 	periodTime = t*(60 *1000)+1000;
 	createChart();
+	ten.classList.add('active');
 }
 
+function zmianaWidoku(ten,widoki=[]){
+	[].forEach.call($$('#widoki button'), function(el) {el.classList.remove('active');});
+	ten.classList.add('active');
+	createChart({vis:widoki})
+	//series:[visible: false	
+}
 
 var defaultData = 'http://www.wi.zut.edu.pl/druk/zapas/time-data.csv.php';
 var urlInput = document.getElementById('fetchURL');
@@ -102,7 +123,11 @@ Highcharts.setOptions({
     }
 });
 
-	function createChart() {
+	function createChart(opt={}) {
+		opt.vis = opt.vis || [];
+		console.log(opt.vis[0])
+		console.log(opt.vis[1])
+		console.log(opt.vis[2])
 		Highcharts.chart('container', {
 			chart: {
 				type: 'spline',
@@ -111,9 +136,7 @@ Highcharts.setOptions({
 						//console.log(1,ev,this);
 					  },
 					  addSeries: function (ev) {
-						//console.log(2,ev,this);
-						//console.log(this.series.length);
-						//console.log(this.series[0]);
+						//console.log(1,ev,this);
 					  }
 					  
 					}
@@ -155,11 +178,11 @@ Highcharts.setOptions({
 				}
 			],
 				series: [
-				{yAxis: 0},
-				{yAxis: 0},
-				{yAxis: 0},
-				{yAxis: 1},
-				{yAxis: 1}
+				{yAxis: 0, visible:opt.vis[0]},
+				{yAxis: 0, visible:opt.vis[1]},
+				{yAxis: 0, visible:opt.vis[2]},
+				{yAxis: 1, visible:opt.vis[3]},
+				{yAxis: 1, visible:opt.vis[4]}
 				],				
 			data: {
 			
@@ -170,24 +193,18 @@ Highcharts.setOptions({
 				dataRefreshRate: parseInt(pollingInput.value, 10),
 					beforeParse: function (csv) {
 						let arr = csv.split("\n");
-						//let arar=arr.slice(-10);
-						csv='';
+						csv = (arr[0]+"\n");
 						let teraz = (new Date()).getTime();
 						let prevTime = teraz - periodTime;
-						//console.log(Number.isInteger(teraz))
 						let i=0;
 						arr.forEach(function(l){
 							let a = l.split(',');
 							let t = parseInt(a[0]);
 							if (t){
-								//console.log(Number.isInteger(t),'t='+t,'prev='+prevTime,t < prevTime);
 								if (prevTime<=t) {csv += l+"\n";i++;}
 							}
 						});
-						console.log(typeof(i),i<0,i==1,i===1,'i=',i,csv.length,csv)
-						console.log(arr[arr.length-2])
-						console.log(arr[arr.length-3])
-						console.log(arr[arr.length-4])
+	
 						if(i==1) {
 							csv += (arr[arr.length-2]+"\n");
 							csv += (arr[arr.length-3]+"\n");
@@ -214,8 +231,6 @@ pollingCheckbox.onchange = urlInput.onchange = pollingInput.onchange = createCha
 
 // Create the chart
 createChart();
-
-
 
 </script>
 

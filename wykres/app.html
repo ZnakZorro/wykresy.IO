@@ -1,0 +1,40 @@
+<html lang="pl"> 
+<head> 
+<meta charset="utf-8"> 
+	<title>APP_mini</title>  
+	<meta name="viewport" content="width=device-width,initial-scale=1"> 
+	<meta name="mobile-web-app-capable" content="yes"> 
+	<link rel="icon" type="image/png" size="128x128" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAgMAAAC+UIlYAAAACVBMVEUAAAAAAAAAAACDY+nAAAAAAnRSTlMAgJsrThgAAADpSURBVFjD7dHBCQMxDERR70VFpJrUo2pURC5SlcEszkCEfwPruRn9wwOPv13vwbMYvNdn8Dz5flUxwqqCCVWM8KpkQjHCZhBMYITPIJHACLuDIAIj/A4SCIywFQQQEOErSCAQwhQEEADhChIIQgBBiEYQAghCNAIgRBACCEI0ghBAEAIIQjSCEEgQQgRGWA+iERDhPUggCAEEIUQAhAgNIQIgRGgIEQAhQkeIwAjbBSECI3wXpAiIsH0QIhDC90GKAAijIBaBEE5BLgIgjIOYBESIQN+xu87bCZ4brPcJTnCCE5zgfp/99gV7t1BMVMeE7wAAAABJRU5ErkJggg=="> 
+	<style>
+		* {box-sizing: border-box;}
+		body,button {font:normal 11pt Verdana; margin:0.5em; padding:0.5em;}
+		button:focus {outline:0;}
+		p {margin:0.2em 0;}
+		@media screen and (max-width: 640px){
+			body {margin:0.2em}
+		}
+	</style>
+
+	<script>
+		function $(id){return document.getElementById(id);}
+		function $$(sel) {return document.querySelectorAll(sel);} 		
+
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log('DOM ready')
+		});	
+
+	</script>	
+	
+	
+</head> 
+<body>
+	<h3>APP_mini</h3>
+	
+	<div id="info"></div>
+	
+	<div id="debug"></div>
+	
+	<div id="content"></div>
+	
+</body> 
+</html>
